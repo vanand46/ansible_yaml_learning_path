@@ -1,0 +1,16 @@
+users:
+  - address: &ref_0
+      street: 123
+      city: 9080
+      state: 900
+      zip: alsdf
+  - name: Alice
+    address: *ref_0
+  - name: Bob
+    address: *ref_0
+  - name: Bob Duplicate
+    address:
+      street: 78
+      city: "908dg0"
+      state: "90dfgd0"
+      zip: alsdf
