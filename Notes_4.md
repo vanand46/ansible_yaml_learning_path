@@ -204,7 +204,7 @@ $ansible-playbook node.yaml -K --verbose
         - ['1']
 ...
 ```        
-- Task Iterations with Loops
+### Task Iterations with Loops
 - Ansible loops
   - Loop,
   - with_<lookup>
