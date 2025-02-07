@@ -1,0 +1,20 @@
+---
+- name: Install nodejs
+  hosts: all
+  gather_facts: yes
+  become: true
+
+  tasks:
+    - name: Add apt key for node installation source
+      apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+
+    - name: Add the node repo
+      apt_repository:
+        repo: 'deb https://deb.nodesource.com/node_0.10 {{ ansible_distribution_release }} main'
+        update_cache: no
+
+    - name: install nodejs
+      apt: name=nodejs 
+
+    - name: verify nodejs
+      shell: node --version
