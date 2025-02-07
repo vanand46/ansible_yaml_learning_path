@@ -262,3 +262,25 @@ Used for creating variables during runtime
 ...
 ```
 
+## Jinja2 Template
+
+- Python Templating engine
+- Dynamic content creatiion (embedded expressions)
+- Used in Flask and Django
+- Template + Context data = Jinja2 
+- .j2 is the extension of the file
+- Context Data - values for the variables in template
+- Output - rendered output(expression replaced with values)
+
+### Where Jinja2 placed in Ansible
+- Jinja 2 templates are processed on Ansible Controller machine
+- Rendered output send to different hosts
+
+### Jinja2 Delimiters
+- `{{ }}` - To embed variables
+- `{% %}` - For control statement (allow to write dynamic rendering logic and will not be the part of final ouput)
+- `{# #}` - Used to specify comments in Jinja template(will not be there final output)
+- `#` - Single line execution
+- `##` - Inline comment
+
+
