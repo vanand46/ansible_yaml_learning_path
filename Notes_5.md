@@ -350,5 +350,10 @@ print(rendered)
     Hello, Joe
     You have 5 new notifications
    ```
+   - Filters  `{{ "apple" | upper }}`
+   - Chained Filters `{{ "apple" | upper | capitalize  }}`
+   - Default filter `{{ user.age | default(25) }}`
+   - Format filter  `{{ user.age | format() }}`
+
 
 
