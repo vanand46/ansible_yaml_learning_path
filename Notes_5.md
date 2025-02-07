@@ -43,4 +43,40 @@
       debug:
         msg: "This is  machine running Ubuntu or Cent OS"
       when: ansible_facts['distribution'] == "CentOS" or ansible_facts['distribution'] == "Ubuntu"             
-```      
+```
+
+### Register Keyword
+Used for creating variables during runtime
+
+- Example
+```YAML
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Check the file exists in path
+      stat:
+        path: ~/demo.txt
+      register: file_status
+      
+    - name: Print the execution output
+      debug: 
+        msg: "{{ file_status }}"
+
+    - name: Create the file if does not exists
+      file:
+        path: ~/demo.txt
+        state: touch
+      when: not file_status.stat.exists
+
+    - name: Execute if the first task is success
+      debug:
+        msg: "New task execution if the first task execution is done"
+      when: not file_status.failed
+
+    - name: Execute if the first task is failure
+      debug:
+        msg: "New task execution if the first task execution is failed"
+      when: file_status.failed
+...
+```
