@@ -1,7 +1,3 @@
-# Configuration Management with Ansible and Terraform 25 January 2025
-
-### Conditionals Example
-```yaml
 - hosts: localhost
   become: true
   tasks:
@@ -43,4 +39,3 @@
       debug:
         msg: "This is  machine running Ubuntu or Cent OS"
       when: ansible_facts['distribution'] == "CentOS" or ansible_facts['distribution'] == "Ubuntu"             
-```      
