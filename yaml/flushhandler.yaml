@@ -1,0 +1,35 @@
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: "Task 1"
+      command: hostname
+      notify: 
+        - Handler2
+
+    - name: "Task 2"
+      command:  hostname
+      notify: 
+        - Handler1
+
+    - name: "Flush all handlers till Task 2"
+      meta: flush_handlers
+    
+    - name: "Task 3"
+      command: hostname
+      notify:
+        - Handler3
+        - Handler1
+  
+  handlers:
+    - name: Handler1
+      debug:
+        msg: "Running Handler 1..."
+
+    - name: Handler2
+      debug:
+        msg: "Running Handler 2..."
+
+    - name: Handler3
+      debug:
+        msg: "Running Handler 3..."

@@ -1,0 +1,30 @@
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: "Task 1"
+      command: hostname
+      notify: 
+        - Handler1
+        - Handler2
+
+    - name: "Task 2"
+      command:  hostname
+      notify: 
+        - Handler1
+    
+    - name: "Task 3"
+      command: hostname
+  
+  handlers:
+    - name: Handler1
+      debug:
+        msg: "Running Handler 1..."
+
+    - name: Handler2
+      debug:
+        msg: "Running Handler 2..."
+
+    - name: Handler3
+      debug:
+        msg: "Running Handler 3..."    
