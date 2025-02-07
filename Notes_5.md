@@ -283,4 +283,72 @@ Used for creating variables during runtime
 - `#` - Single line execution
 - `##` - Inline comment
 
+### When to use Jinja2
+- Dynamic Web Content
+- To Create Email Templates
+- To Create Automated Configuration Files
+- To Produce Dynamic Reports in PDF or HTML
+
+### Where is Jinja used
+- Web frameworks
+- Configuration Management
+- Static Site Generators
+- Security and Vulnerability
+- DevOps and monitoring tools
+- AI and chatbots
+
+### How to set-up Jinja2 
+```sh
+sudo apt update -y
+sudo apt -y install python3
+sudo apt -y install python3-jinja2
+```
+- Verify Jinja2
+```sh
+python3 -c "import jinja2; print(jinja2.__version__)"
+dpkg-query -l | grep python3-jinja2
+``` 
+
+- Variable in Jinja2 - placeholder used to store manage dynamic data within the template (`{{ var1 }}`)
+- Variables in Templates
+```py
+from jinja2 import Template
+
+template = Template("Hello, {{ name }}")
+rendered = template.render(name="Alice")
+
+print(rendered)
+```
+
+- Default Variable `{{ user.age | default(25) }}`
+- Supports conditional and loop statements.
+
+- An example
+ - Create template file
+   ```j2
+   Hello, {{ name }}
+   You have {{ notifications }} new notifications
+   ```
+ - Create python script to render template 
+   ```py
+    from jinja2 import Environment, FileSystemLoader
+
+    file_loader = FileSystemLoader('../jinja/')
+    env = Environment(loader=file_loader)
+
+    template = env.get_template('first.j2')
+
+    context = {
+        'name': 'Joe',
+        'notifications': 5
+    }
+
+    print(template.render(context))
+   ```
+   ```sh
+    python3 renderer.py 
+    Hello, Joe
+    You have 5 new notifications
+   ```
+
 
