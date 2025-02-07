@@ -171,3 +171,94 @@ Used for creating variables during runtime
 ...
 ```
 
+## Ansible Filters
+- Same as python filters
+- Using Jinja 2 templates
+- Used to tranform/manipulate data
+- Used to perform mathematical operations
+
+### Commonly used filters
+- String filters
+    - lower
+    - upper
+    - replace
+- Number filters 
+    - round
+    - abs
+    - int
+- Date and time filters
+    - strftime
+    - timestamp
+- List and dictionary filters
+    - sort
+    - unique
+    - join 
+### Filters for Data Structures
+``` Jinja
+{{ some_variable | to_json }}
+{{ some_variable | to_yaml }}
+{{ some_variable | to_nice_json }}
+{{ some_variable | to_nice_yaml }}
+{{ some_variable | from_json }}
+{{ some_variable | from_yaml }}
+```
+### Filters for List
+``` Jinja
+{{ list1 | min }}
+{{ [6, 5, 1] | max }}
+{{ [6, 5, 1, [09, 56]] | flatten }}
+```
+
+### Filters for Dictionary
+``` Jinja
+{{ dict | dict2items }}
+{{ tags | items2dict }}
+```
+
+- Filters Example
+
+```YAML
+---
+- name: Ansible Filters
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    sample_list: [100, 200, 300, 400, 500]
+    sample_list_alt: [100, [200, 300], 400, 500]
+    sample_string: "this is test message"
+    sample_dict:
+      a: "ab"
+      b: "bc"
+  
+  tasks:
+    - name: List to comma-separated string
+      debug:
+        msg: "{{ sample_list | join(',') }}"
+    
+    - name: Flatten list
+      debug:
+        msg: "{{ sample_list_alt | flatten }}"
+    
+    - name: Capitalize String
+      debug:
+        msg: "{{ sample_string | capitalize }}"
+
+    - name: Convert dict to items
+      debug:
+        msg: "{{ sample_dict | dict2items }}"    
+    
+    - name: Convert dict to list of keys
+      debug:
+        msg: "{{ sample_dict | dict2items | map(attribute='key') | list }}"
+
+    - name: Sum 
+      debug:
+        msg: "{{ sample_list | sum }}" 
+    
+    - name: Sort 
+      debug:
+        msg: "{{ sample_list | sort(reverse=True) }}" 
+...
+```
+
