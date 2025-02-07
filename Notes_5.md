@@ -80,3 +80,94 @@ Used for creating variables during runtime
       when: file_status.failed
 ...
 ```
+
+## Ansible Handlers
+- Special tasks that should be notified by other tasks
+- Single handler can be notified by multiple tasks
+  - the handler task will be executed only once as part of the play execution
+  - the handler tasks execution will happen only after all other task execution are complete
+- Sinlge task can notify multiple handlers  
+
+### Controlling When Handlers Run
+- By default, Ansible handlers run after all tasks in a play are completed.
+- To run handlers before the end of the play, use `meta: flush_handlers`
+
+### Handlers Example
+- Multihandler example
+```YAML
+---
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: "Task 1"
+      command: hostname
+      notify: 
+        - Handler1
+        - Handler2
+
+    - name: "Task 2"
+      command:  hostname
+      notify: 
+        - Handler1
+    
+    - name: "Task 3"
+      command: hostname
+  
+  handlers:
+    - name: Handler1
+      debug:
+        msg: "Running Handler 1..."
+
+    - name: Handler2
+      debug:
+        msg: "Running Handler 2..."
+
+    - name: Handler3
+      debug:
+        msg: "Running Handler 3..."        
+...
+```
+
+- Flush handler example
+
+```YAML
+---
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: "Task 1"
+      command: hostname
+      notify: 
+        - Handler2
+
+    - name: "Task 2"
+      command:  hostname
+      notify: 
+        - Handler1
+
+    - name: "Flush all handlers till Task 2"
+      meta: flush_handlers
+    
+    - name: "Task 3"
+      command: hostname
+      notify:
+        - Handler3
+        - Handler1
+  
+  handlers:
+    - name: Handler1
+      debug:
+        msg: "Running Handler 1..."
+
+    - name: Handler2
+      debug:
+        msg: "Running Handler 2..."
+
+    - name: Handler3
+      debug:
+        msg: "Running Handler 3..."    
+...
+```
+
