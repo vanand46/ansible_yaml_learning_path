@@ -1,0 +1,42 @@
+---
+- name: Ansible Filters
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    sample_list: [100, 200, 300, 400, 500]
+    sample_list_alt: [100, [200, 300], 400, 500]
+    sample_string: "this is test message"
+    sample_dict:
+      a: "ab"
+      b: "bc"
+  
+  tasks:
+    - name: List to comma-separated string
+      debug:
+        msg: "{{ sample_list | join(',') }}"
+    
+    - name: Flatten list
+      debug:
+        msg: "{{ sample_list_alt | flatten }}"
+    
+    - name: Capitalize String
+      debug:
+        msg: "{{ sample_string | capitalize }}"
+
+    - name: Convert dict to items
+      debug:
+        msg: "{{ sample_dict | dict2items }}"    
+    
+    - name: Convert dict to list of keys
+      debug:
+        msg: "{{ sample_dict | dict2items | map(attribute='key') | list }}"
+
+    - name: Sum 
+      debug:
+        msg: "{{ sample_list | sum }}" 
+    
+    - name: Sort 
+      debug:
+        msg: "{{ sample_list | sort(reverse=True) }}" 
+...
