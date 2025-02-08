@@ -7,3 +7,5 @@ Product List:
       OUT OF STOCK
     {% endif %} 
 {% endfor %}
+
+On the machine {{ ansible_host | default("Custom Machine") }}

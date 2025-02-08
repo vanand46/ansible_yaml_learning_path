@@ -32,6 +32,7 @@
 
 ### Jinja2 examples
 
+#### Example with Python
 - Create variable file
 ```YAML
 ---
@@ -78,4 +79,35 @@ template = env.get_template('jinja_template.j2')
 print(template.render(data))
 ```
 - Execute python  `python3 python/jinja_renderer.py`
+
+#### Example with ansible playbook
+- Create Template
+```j2
+Product List:
+{% for product in products %}
+  - {{ product.name }} for {{ product.price }}
+    {% if product.in_stock %}
+      Buy now at {{ discount }}% OFF!
+    {% else %}
+      OUT OF STOCK
+    {% endif %} 
+{% endfor %}
+
+On the machine {{ ansible_host | default("Custom Machine") }}
+```
+
+- Create a playbook
+```yaml
+---
+- hosts: localhost
+  vars_files:
+    - jinja_data.yaml
+  tasks:
+    - name: To Render file from template
+      template:
+        src: ../jinja/jinja_template.j2
+        dest: ~/rendered_playbook_output.txt
+...
+```
+
 

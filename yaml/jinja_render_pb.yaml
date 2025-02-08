@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  vars_files:
+    - jinja_data.yaml
+  tasks:
+    - name: To Render file from template
+      template:
+        src: ../jinja/jinja_template.j2
+        dest: ~/rendered_playbook_output.txt
+...
