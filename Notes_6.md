@@ -160,3 +160,123 @@ On the machine {{ ansible_host | default("Custom Machine") }}
 - roles relative to the playbook file
 - roles_path
 
+### Using Ansible Roles
+- At the play level
+- At the task level (include_role (dynamic) or import_role (static))
+- As dependency to another role
+
+### Using Ansible Roles at Play level
+- Order of execution
+    - pre_tasks
+    - handlers notified in pre_tasks
+    - process roles
+    - tasks within the play
+    - handleres notified in roles and tasks
+    - post_tasks
+    - handlers notified in post_tasks
+- Multiple execution of a role
+    - Ansible executes each role once , even if it is defined multiple times
+    - Roles are executed multiple times only if the parameters defined on the role are different for each definition. 
+    - Inside the meta of the role add allow_duplicates:true   
+
+### Creating the roles
+
+```sh
+mkdir roles_test
+cd roles_test
+ansible-galaxy init apache_role
+```
+- nano roles_test/roles/apache_role/tasks/install.yml
+```yml
+---
+- name: Install the apache2 package
+  apt:
+    name: apache2
+    state: present
+...
+```
+
+- nano roles_test/roles/apache_role/tasks/config.yml
+```yml
+---
+- name: Copy index file to apache server directory
+  copy:
+    src: files/index.html
+    dest: /var/www/html/
+...
+```
+
+- nano roles_test/roles/apache_role/tasks/service.yml
+```yml
+---
+- name: Start the apache service
+  service:
+    name: apache2
+    state: started
+...
+```
+
+- nano roles_test/roles/apache_role/tasks/main.yml
+```yml
+---
+- import_tasks: install.yml
+- import_tasks: config.yml
+- import_tasks: service.yml
+- import_tasks: print_var.yml
+...
+```
+
+- nano roles_test/roles/apache_role/files/index.html
+```html
+<html>
+    <head>
+        <title>Welcome Page</title>
+    </head>    
+    <body>
+        <h2>New Page</h2>
+        <p>Hi Hello</p>
+    </body>    
+ </html>   
+```
+
+- nano roles_test/roles/apache_role/tasks/print_var.yml
+```yml
+---
+- name: Print the variable
+  debug:
+    msg: "The value for var message is {{ message }}"
+...    
+``` 
+
+- nano roles_test/roles/apache_role/vars/main.yml
+```yml
+---
+message: "This is the custom message"
+...
+```
+
+- nano roles_test/roles/apache_role/defaults/main.yml
+```yml
+---
+message: "This is the DEFAULT message"
+...
+```
+- Remove unwanted directoreis
+```sh
+rm -rf roles_test/roles/apache_role/handlers roles_test/roles/apache_role/tests roles_test/roles/apache_role/templates
+```
+
+- Create a playbook to use the role `nano roles_test/setup.yml`
+```yml
+- hosts: all
+  become: true
+  roles:
+    - apache_role
+```
+
+- Execute the playbook
+`ansible-playbook setup.yml`
+
+
+
+
