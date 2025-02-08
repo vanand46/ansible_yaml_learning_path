@@ -110,4 +110,8 @@ On the machine {{ ansible_host | default("Custom Machine") }}
 ...
 ```
 
+### Tests in Jina2
+- Variable Testing
+- Comparing Versions
+- When using version, do not use {{}}
 
