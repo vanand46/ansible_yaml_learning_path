@@ -1,0 +1,11 @@
+products:
+  - name: Laptop
+    price: 1000
+    in_stock: true
+  - name: Smartphone
+    price: 500
+    in_stock: false  
+  - name: Tablet
+    price: 300
+    in_stock: true  
+discount: 10 

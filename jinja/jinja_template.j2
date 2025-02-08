@@ -1,0 +1,9 @@
+Product List:
+{% for product in products %}
+  - {{ product.name }} for {{ product.price }}
+    {% if product.in_stock %}
+      Buy now at {{ discount }}% OFF!
+    {% else %}
+      OUT OF STOCK
+    {% endif %} 
+{% endfor %}

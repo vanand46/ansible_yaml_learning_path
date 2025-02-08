@@ -30,3 +30,52 @@
 ### Control Structure
 - Used to manage the flow of template rendering and enable dynamic content insertion through loops and conditional statements.
 
+### Jinja2 examples
+
+- Create variable file
+```YAML
+---
+products:
+  - name: Laptop
+    price: 1000
+    in_stock: true
+  - name: Smartphone
+    price: 500
+    in_stock: false  
+  - name: Tablet
+    price: 300
+    in_stock: false  
+discount: 10    
+...
+```
+
+- Create template file
+```j2
+Product List:
+{% for product in products %}
+  - {{ product.name }} for {{ product.price }}
+    {% if product.in_stock %}
+      Buy now at {{ discount }}% OFF!
+    {% else %}
+      OUT OF STOCK
+    {% endif %} 
+{% endfor %}     
+```
+
+- Create python script for rendering
+```py
+import yaml
+from jinja2 import Environment, FileSystemLoader
+
+with open('yaml/jinja_data.yaml', 'r') as file:
+    data = yaml.safe_load(file)
+
+file_loader = FileSystemLoader('jinja/')
+env = Environment(loader=file_loader)
+
+template = env.get_template('jinja_template.j2')
+
+print(template.render(data))
+```
+- Execute python  `python3 python/jinja_renderer.py`
+
