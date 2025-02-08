@@ -115,3 +115,48 @@ On the machine {{ ansible_host | default("Custom Machine") }}
 - Comparing Versions
 - When using version, do not use {{}}
 
+## Working with Ansible Roles and Vault
+
+### Ansible Roles
+- It is a self-contained and portable unit of automation that groups realted tasks and associated variables, files and other assets in a known file structure.
+- It can create bundles of automation content that you can run in one or more plays, reuse across playbooks, and share with other users in collections.
+- Must be used in playbook
+- Using YAML files 
+- Set of tasks
+- Enhance code reusability
+- Easily modified
+
+### Why Ansible Roles
+- Reusability
+- Modularity
+- Organization
+- Parameterization
+- Dependency Management
+- Versioning
+- Simplicity
+
+### Roles use cases
+- Server provisioing and configuration
+- Application deployment
+- Security and compliance
+- Patch management
+- Disaster recovery and backup
+
+### Ansible Role Directory
+- It is a predefined directory structure that helps organize various components of a role such as tasks, handlers, variables, templates and files.
+- tasks
+- handlers
+- defaults
+- vars
+- files
+- meta
+- templates
+
+### Creating Ansible Role
+- Use utility `ansible-galaxy`
+- `ansible-galaxy init role_name`
+- Tasks in an Ansible Role
+- Storing and finding a role
+- roles relative to the playbook file
+- roles_path
+
