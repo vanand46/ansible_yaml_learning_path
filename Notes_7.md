@@ -169,6 +169,13 @@ $ ansible localhost -m copy -a "src=vault_test.txt dest=~/from_vault_test1.txt" 
 $ cat ~/from_vault_test1.txt
 ```
 
+## Error Handling and Troubleshooting in Ansible
+- Using Blocks (block, rescue and always)
+- ansible_failed_task
+- ansible_failed_result
+- --syantax-check
+- --flush-cache
+
 
 
 
