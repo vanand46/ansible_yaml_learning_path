@@ -7,94 +7,94 @@
   tasks:
     - name: Execute only if os_family is Debian
       debug:
-        msg: "This is debian machine"
+        msg: "This is a Debian machine"
       when: ansible_os_family == "Debian"
     
     - name: Execute only if os_family is Ubuntu
       debug:
-        msg: "This is ubuntu machine"
-      when: ansible_os_family == "Ubuntu" 
+        msg: "This is an Ubuntu machine"
+      when: ansible_os_family == "Ubuntu"
 
     - name: Execute only if os_family is Debian alternative
       debug:
-        msg: "This is debian machine verified using ansible facts"
-      when: ansible_facts['os_family'] == "Debian" 
+        msg: "This is a Debian machine verified using Ansible facts"
+      when: ansible_facts['os_family'] == "Debian"
 
-    - name: Test whether the machie is running Ubuntu and version is 20
+    - name: Test whether the machine is running Ubuntu and version is 20
       debug:
-        msg: "This is  machine running Ubuntu 20"
+        msg: "This is a machine running Ubuntu 20"
       when: ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_major_version'] == "20"
 
-    - name: Test whether the machie is running Ubuntu and version is 22
+    - name: Test whether the machine is running Ubuntu and version is 22
       debug:
-        msg: "This is  machine running Ubuntu 22"
-      when: 
+        msg: "This is a machine running Ubuntu 22"
+      when:
         - ansible_facts['distribution'] == "Ubuntu"
-        - ansible_facts['distribution_major_version'] == "22" 
+        - ansible_facts['distribution_major_version'] == "22"
 
-    - name: Test whether the machie is running Ubuntu 14 and above
+    - name: Test whether the machine is running Ubuntu 14 and above
       debug:
-        msg: "This is  machine running Ubuntu 14 and above"
-      when: 
-        - ansible_facts['distribution'] == "Ubuntu" 
+        msg: "This is a machine running Ubuntu 14 and above"
+      when:
+        - ansible_facts['distribution'] == "Ubuntu"
         - ansible_facts['distribution_major_version'] | int >= 14
 
-    - name: Test whether the machie is running Ubuntu or CentOS 
+    - name: Test whether the machine is running Ubuntu or CentOS
       debug:
-        msg: "This is  machine running Ubuntu or Cent OS"
+        msg: "This is a machine running Ubuntu or CentOS"
       when: ansible_facts['distribution'] == "CentOS" or ansible_facts['distribution'] == "Ubuntu"             
 ```
 
 ### Register Keyword
-Used for creating variables during runtime
+Used for creating variables during runtime.
 
 - Example
-```YAML
+```yaml
 ---
 - hosts: localhost
   gather_facts: no
   tasks:
-    - name: Check the file exists in path
+    - name: Check if the file exists in the path
       stat:
         path: ~/demo.txt
       register: file_status
       
     - name: Print the execution output
-      debug: 
+      debug:
         msg: "{{ file_status }}"
 
-    - name: Create the file if does not exists
+    - name: Create the file if it does not exist
       file:
         path: ~/demo.txt
         state: touch
       when: not file_status.stat.exists
 
-    - name: Execute if the first task is success
+    - name: Execute if the first task is successful
       debug:
         msg: "New task execution if the first task execution is done"
       when: not file_status.failed
 
-    - name: Execute if the first task is failure
+    - name: Execute if the first task fails
       debug:
-        msg: "New task execution if the first task execution is failed"
+        msg: "New task execution if the first task execution failed"
       when: file_status.failed
 ...
 ```
 
 ## Ansible Handlers
-- Special tasks that should be notified by other tasks
-- Single handler can be notified by multiple tasks
-  - the handler task will be executed only once as part of the play execution
-  - the handler tasks execution will happen only after all other task execution are complete
-- Sinlge task can notify multiple handlers  
+- Special tasks that should be notified by other tasks.
+- A single handler can be notified by multiple tasks.
+  - The handler task will be executed only once as part of the play execution.
+  - The handler task execution will happen only after all other task executions are complete.
+- A single task can notify multiple handlers.  
 
 ### Controlling When Handlers Run
 - By default, Ansible handlers run after all tasks in a play are completed.
-- To run handlers before the end of the play, use `meta: flush_handlers`
+- To run handlers before the end of the play, use `meta: flush_handlers`.
 
 ### Handlers Example
-- Multihandler example
-```YAML
+- Multi-handler example
+```yaml
 ---
 - hosts: localhost
   gather_facts: no
@@ -102,13 +102,13 @@ Used for creating variables during runtime
   tasks:
     - name: "Task 1"
       command: hostname
-      notify: 
+      notify:
         - Handler1
         - Handler2
 
     - name: "Task 2"
-      command:  hostname
-      notify: 
+      command: hostname
+      notify:
         - Handler1
     
     - name: "Task 3"
@@ -129,9 +129,8 @@ Used for creating variables during runtime
 ...
 ```
 
-- Flush handler example
-
-```YAML
+### Flush Handler Example
+```yaml
 ---
 - hosts: localhost
   gather_facts: no
@@ -139,12 +138,12 @@ Used for creating variables during runtime
   tasks:
     - name: "Task 1"
       command: hostname
-      notify: 
+      notify:
         - Handler2
 
     - name: "Task 2"
-      command:  hostname
-      notify: 
+      command: hostname
+      notify:
         - Handler1
 
     - name: "Flush all handlers till Task 2"
@@ -172,27 +171,28 @@ Used for creating variables during runtime
 ```
 
 ## Ansible Filters
-- Same as python filters
-- Using Jinja 2 templates
-- Used to tranform/manipulate data
-- Used to perform mathematical operations
+- Same as Python filters.
+- Uses Jinja2 templates.
+- Used to transform/manipulate data.
+- Used to perform mathematical operations.
 
-### Commonly used filters
-- String filters
+### Commonly Used Filters
+- **String filters**
     - lower
     - upper
     - replace
-- Number filters 
+- **Number filters**
     - round
     - abs
     - int
-- Date and time filters
+- **Date and time filters**
     - strftime
     - timestamp
-- List and dictionary filters
+- **List and dictionary filters**
     - sort
     - unique
-    - join 
+    - join
+
 ### Filters for Data Structures
 ``` Jinja
 {{ some_variable | to_json }}
@@ -202,115 +202,38 @@ Used for creating variables during runtime
 {{ some_variable | from_json }}
 {{ some_variable | from_yaml }}
 ```
-### Filters for List
+
+### Filters for Lists
 ``` Jinja
 {{ list1 | min }}
 {{ [6, 5, 1] | max }}
-{{ [6, 5, 1, [09, 56]] | flatten }}
+{{ [6, 5, 1, [9, 56]] | flatten }}
 ```
 
-### Filters for Dictionary
+### Filters for Dictionaries
 ``` Jinja
 {{ dict | dict2items }}
 {{ tags | items2dict }}
 ```
 
-- Filters Example
-
-```YAML
----
-- name: Ansible Filters
-  hosts: localhost
-  gather_facts: no
-
-  vars:
-    sample_list: [100, 200, 300, 400, 500]
-    sample_list_alt: [100, [200, 300], 400, 500]
-    sample_string: "this is test message"
-    sample_dict:
-      a: "ab"
-      b: "bc"
-  
-  tasks:
-    - name: List to comma-separated string
-      debug:
-        msg: "{{ sample_list | join(',') }}"
-    
-    - name: Flatten list
-      debug:
-        msg: "{{ sample_list_alt | flatten }}"
-    
-    - name: Capitalize String
-      debug:
-        msg: "{{ sample_string | capitalize }}"
-
-    - name: Convert dict to items
-      debug:
-        msg: "{{ sample_dict | dict2items }}"    
-    
-    - name: Convert dict to list of keys
-      debug:
-        msg: "{{ sample_dict | dict2items | map(attribute='key') | list }}"
-
-    - name: Sum 
-      debug:
-        msg: "{{ sample_list | sum }}" 
-    
-    - name: Sort 
-      debug:
-        msg: "{{ sample_list | sort(reverse=True) }}" 
-...
-```
-
 ## Jinja2 Template
 
-- Python Templating engine
-- Dynamic content creatiion (embedded expressions)
-- Used in Flask and Django
-- Template + Context data = Jinja2 
-- .j2 is the extension of the file
-- Context Data - values for the variables in template
-- Output - rendered output(expression replaced with values)
-
-### Where Jinja2 placed in Ansible
-- Jinja 2 templates are processed on Ansible Controller machine
-- Rendered output send to different hosts
+- Python templating engine.
+- Dynamic content creation (embedded expressions).
+- Used in Flask and Django.
+- Template + Context data = Jinja2.
+- `.j2` is the file extension.
+- Context Data - values for the variables in a template.
+- Output - rendered output (expressions replaced with values).
 
 ### Jinja2 Delimiters
-- `{{ }}` - To embed variables
-- `{% %}` - For control statement (allow to write dynamic rendering logic and will not be the part of final ouput)
-- `{# #}` - Used to specify comments in Jinja template(will not be there final output)
-- `#` - Single line execution
-- `##` - Inline comment
+- `{{ }}` - To embed variables.
+- `{% %}` - For control statements (used for dynamic rendering logic; not part of final output).
+- `{# #}` - Used for comments in Jinja templates (not included in final output).
+- `#` - Single-line execution.
+- `##` - Inline comment.
 
-### When to use Jinja2
-- Dynamic Web Content
-- To Create Email Templates
-- To Create Automated Configuration Files
-- To Produce Dynamic Reports in PDF or HTML
-
-### Where is Jinja used
-- Web frameworks
-- Configuration Management
-- Static Site Generators
-- Security and Vulnerability
-- DevOps and monitoring tools
-- AI and chatbots
-
-### How to set-up Jinja2 
-```sh
-sudo apt update -y
-sudo apt -y install python3
-sudo apt -y install python3-jinja2
-```
-- Verify Jinja2
-```sh
-python3 -c "import jinja2; print(jinja2.__version__)"
-dpkg-query -l | grep python3-jinja2
-``` 
-
-- Variable in Jinja2 - placeholder used to store manage dynamic data within the template (`{{ var1 }}`)
-- Variables in Templates
+### Example Jinja2 Rendering in Python
 ```py
 from jinja2 import Template
 
@@ -320,40 +243,11 @@ rendered = template.render(name="Alice")
 print(rendered)
 ```
 
-- Default Variable `{{ user.age | default(25) }}`
-- Supports conditional and loop statements.
-
-- An example
- - Create template file
-   ```j2
-   Hello, {{ name }}
-   You have {{ notifications }} new notifications
-   ```
- - Create python script to render template 
-   ```py
-    from jinja2 import Environment, FileSystemLoader
-
-    file_loader = FileSystemLoader('../jinja/')
-    env = Environment(loader=file_loader)
-
-    template = env.get_template('first.j2')
-
-    context = {
-        'name': 'Joe',
-        'notifications': 5
-    }
-
-    print(template.render(context))
-   ```
-   ```sh
-    python3 renderer.py 
-    Hello, Joe
-    You have 5 new notifications
-   ```
-   - Filters  `{{ "apple" | upper }}`
-   - Chained Filters `{{ "apple" | upper | capitalize  }}`
-   - Default filter `{{ user.age | default(25) }}`
-   - Format filter  `{{ user.age | format() }}`
-
-
+### Filters Example
+``` Jinja
+{{ "apple" | upper }}
+{{ "apple" | upper | capitalize }}
+{{ user.age | default(25) }}
+{{ user.age | format() }}
+```
 
