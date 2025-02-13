@@ -123,5 +123,36 @@ $ ssh -i "demo_key.pem" ubuntu@54.146.174.190
 ```
 ## Hands On - Hashicorp Configuration Language:
 
+```bash
+$ terraform -version
 
+$ cd 
+$ mkdir tf_s3
+$ cd tf_s3
+
+
+$ nano main.tf
+provider "aws" {
+  access_key = "YOUR_AWS_ACCESS_KEY"
+  secret_key = "YOUR_AWS_SECRET_KEY"
+  region = "us-east-1"
+}
+
+resource "aws_s3_bucket" "example" {
+  bucket = "my-unique-bucket-${random_id.bucket_id.hex}"
+}
+
+resource "random_id" "bucket_id" {
+  byte_length = 8
+}
+$ terraform init
+$ terraform validate
+$ terraform plan
+$ terraform apply
+```
+- Please go to AWS s3 and check whether bucket has created or not
+```bash
+$ terraform destroy -auto-approve
+```
+- Please go to AWS s3 and check whether bucket has deleted or not
 
