@@ -176,6 +176,121 @@ $ cat ~/from_vault_test1.txt
 - --syantax-check
 - --flush-cache
 
+## Working with Dynamic Inventory
+- It is a feature in automation tools like Ansible that automatically retrives and manages Inventory data from various sources in real time.
+- Inventory plugins - allow users to connect to various data sources to generate host Inventory that Ansible uses to target jobs
+- Inventory Scripts
+
+### Example of script
+- Python script to get EC2 instances - as a Dynamic Inventory
+- Install boto3 and awscli
+- `pip install boto3`
+- `pip install awscli`
+```bash 
+aws --version
+aws-cli/1.37.19 Python/3.12.1 Linux/6.5.0-1025-azure botocore/1.36.19
+```
+- Configure AWS configure CLI.
+```bash
+$aws configure
+AWS Access Key:
+AWS Secret Key:
+Default Region name:
+Default output format:
+```
+- `nano python/dynamic_ec2.py`
+```py
+#! /usr/bin/env python
+
+import boto3
+import json
+
+def get_ec2_instances():
+    ec2 = boto3.resource('ec2')
+    instances = ec2.instances.filter(
+        Filters=[
+            { 'Name': 'instance-state-name', 'Values': ['running'] }
+        ]
+    )
+    inventory = { 'all' : {'hosts':[]}}
+
+    for instance in instances:
+        for tag in instance.tags:
+            if tag['Key'] == 'Name':
+                inventory['all']['hosts'].append(instance.public_dns_name)
+                #inventory['all']['hosts'].append(instance.public_ip_address)
+    return inventory
+
+def get_dummynodes():
+    inventory = { 'all': { 'hosts': [] } }
+    inventory['all']['hosts'].append('localhost')
+    inventory['all']['hosts'].append('host1')
+    inventory['all']['hosts'].append('host2')
+    return inventory
+
+if __name__=="__main__":
+    #inventory = get_ec2_instances()
+    inventory = get_dummynodes()
+    print(json.dumps(inventory))
+```
+- Execute `python/dynamic_ec2.py`.
+```bash
+$ sudo chmod +x python/dynamic_ec2.py
+$ ansible-inventory -i python/dynamic_ec2.py --list
+```
+
+```
+INI:
+====
+[myservers]
+localhost
+
+host1
+
+
+JSON:
+=====
+{
+    "all": {
+        "children": [
+            "ungrouped",
+            "myservers"
+        ]
+    },
+    "myservers": {
+        "hosts": [
+            "localhost"
+        ]
+    },
+    "ungrouped": {
+        "hosts": [
+            "host1"
+        ]
+    }
+}
+
+
+YAML:
+=====
+---
+all: 
+  children:
+    ungrouped
+    myservers
+
+myservers:
+  hosts:
+    localhost
+
+ungrouped:
+  hosts:
+    host1
+```
+
+## Anisble Tower
+
+
+
 
 
 
