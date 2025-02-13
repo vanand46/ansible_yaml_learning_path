@@ -204,3 +204,96 @@ $terraform validate
 $terraform apply -auto-approve
 ```
 
+## Terraform Basics and Workflows
+## Providers
+- Plugin that enable Terraform to manage resources across variou platforms including the cloud, container tools, databases and other APIs.
+- https://registry.terraform.io/
+  - azure
+  - aws
+  - kube
+  - GC
+  - alibaba
+  - Oracle
+  - VMware vShere
+### Role of Providers
+- Provide resource types and data sources
+- Implement each resource type, making them essential for Terrforms functionality
+### Running Multiple Terraform Providers
+ - Improved reliability
+ - Cost Optimization
+ - Performance Optimization
+ - Enhanced security and compliance
+ - Innovation and flexibility
+ - Strategic benefits
+
+ ```bash
+ $ mkdir tf_multiprovider
+ $ cd tf_multiprovider/
+ $ nano main.tf
+ ```
+ ```tf
+ terraform {
+    required_version = ">=1.0.0"
+    required_providers {
+        aws = {
+            source = "hashicorp/aws"
+            version = "5.86.1"
+        }
+        random = {
+            source = "hashicorp/random"
+            version = "3.6.3"
+        }
+    }
+}
+ ```
+ ```bash
+ $terraform providers
+ ```
+ ```bash
+ $nano main_aws.tf
+ ```
+ ```tf
+ provider "aws" {
+  access_key = "access_key"
+  secret_key = "secret_key"
+  region = "us-east-1"
+  alias = "us_east_1"
+}
+
+provider "aws" {
+ access_key = "access_key"
+  secret_key = "secret_key"
+  region = "us-east-2"
+  alias = "us_east_2"
+}
+
+resource "aws_instance" "example_us_east_1" {
+  provider = aws.us_east_1
+  ami = "ami-0e1bed4f06a3b463d"
+  instance_type = "t2.micro"
+}
+
+resource "aws_s3_bucket" "example" {
+  provider = aws.us_east_2
+  bucket = "my-unique-bucket-${random_id.bucket_id.hex}"
+}
+
+resource "random_id" "bucket_id" {
+  byte_length = 8
+}
+ ```
+ ```bash
+$ terraform init
+$ terraform validate
+$ terraform plan
+$ terraform apply -auto-approve
+ ```
+
+ - Please go to AWS  and check whether s3 bucket and ec2 instance  have created or not
+
+  ```bash
+$ terraform destroy -auto-approve
+````
+
+- Please go to AWS  and check whether s3 bucket and ec2 instance  have deleted or not
+
