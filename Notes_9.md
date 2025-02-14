@@ -265,3 +265,14 @@ output "instance_ip" {
   value = aws_instance.web.public_ip
 } 
 ```
+```bash
+$terraform init
+$terraform validate
+$terraform plan
+$terraform apply -auto-approve
+```
+- Check the content of files hello.txt and myhosts in local machine
+- Also check ec2 instance home directory to the file is created
+```bash
+$terraform destroy -auto-approve ## delete all resources created above
+```
