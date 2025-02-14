@@ -6,8 +6,8 @@ locals {
 
 # Provider section
 provider "aws" {
-  access_key = "AKIA2GJX66KECVD3T4SM"
-  secret_key = "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"
+  access_key = "adf"
+  secret_key = "dfd/asdfgdfg"
   region = "us-east-1"
 }
 
