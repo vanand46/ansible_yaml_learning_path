@@ -193,3 +193,50 @@ terraform {
 $ terraform init -backend-config="access_key='YOUR_AWS_ACCESS_KEY'"  -backend-config="secret_key='YOUR_AWS_SECRET_KEY'" 
 $ terraform apply -auto-approve
 ```
+## Implementing State Migration
+- Improved scalability
+- Enhanced security
+- Centralized management
+### Where to use migration
+- Local to remote backend
+- Reorganizing resources
+- Changing cloud providers
+### Ways to Migrate Terraform State
+- Using terraform init command
+- Manually copy the state files
+- Using terraform state commands
+- Verify the migration with terraform plan
+- Update terraform configurations
+
+## Migrate the state file to terraform cloud
+- Login to https://app.terraform.io/ 
+- Click on your Organization
+- Create workspace > CLI Driven Workflow
+  - Workspace name: my-aws-app
+  - Create
+![alt text](image-2.png) 
+![alt text](image-3.png)
+![alt text](image-4.png)
+
+```bash
+$ cd s3-dynamodb-state
+$ nano main.tf
+```
+```tf
+terraform {
+  backend "remote" {
+    hostname = "app.terraform.io"
+    organization = "YOUR_ORG_NAME" 
+
+    workspaces { 
+      name = "my-aws-app" 
+    } 
+  }
+}
+```
+```bash
+$ terraform validate
+$ terraform init -migrate-state
+```
+![alt text](image-5.png)
+
