@@ -240,3 +240,184 @@ $ terraform init -migrate-state
 ```
 ![alt text](image-5.png)
 
+## Handling Sensitive Data in Terraform State
+- refers to information that needs protection due to its confidential nature
+- includes database , passwords, private keys and other credentials 
+### Recommendations for Handling Sensitive Data
+- Treat state as sensitive data(it contains all infrastructure information)
+- Using remote backend (provides better security like encryption)
+- Verify backend configurations
+
+## Managing sensitive data in Terraform state
+```bash
+$ mkdir sensitive_tf
+$ cd sensitive_tf
+$ nano main.tf
+```
+```tf
+variable "name" {
+  type = string
+  default = "Abhi"
+}
+
+variable "phone" {
+  type = string
+  default = "123-456"
+}
+
+locals {
+  contact_info = {
+    name = var.name
+    phone = var.phone
+  }
+  my_number = var.phone
+}
+
+output "name" {
+  value = local.contact_info.name
+}
+
+output "phone_number" {
+  value = local.contact_info.phone
+}
+
+output "my_number" {
+  value = local.my_number
+}
+```
+```bash
+$ terraform init
+$ terraform validate
+$ terraform apply -auto-approve
+```
+![alt text](image-6.png)
+
+```bash
+$nano main.tf
+```
+```tf
+variable "name" {
+  type = string
+  sensitive = true
+  default = "John"
+}
+
+variable "phone" {
+  type = string
+  sensitive = true
+  default = "123-456"
+}
+
+locals {
+  contact_info = {
+    name = var.name
+    phone = var.phone
+  }
+  my_number = var.phone
+}
+
+output "name" {
+  value = local.contact_info.name
+}
+
+output "phone_number" {
+  value = local.contact_info.phone
+}
+
+output "my_number" {
+  value = local.my_number
+}
+```
+```bash
+$ terraform validate
+```
+![alt text](image-7.png)
+
+```bash
+$ nano main.tf
+```
+```tf
+variable "name" {
+  type = string
+  sensitive = true
+  default = "John"
+}
+
+variable "phone" {
+  type = string
+  sensitive = true
+  default = "123-456"
+}
+
+locals {
+  contact_info = {
+    name = var.name
+    phone = var.phone
+  }
+  my_number = var.phone
+}
+
+output "name" {
+  value = local.contact_info.name
+  sensitive = true
+}
+
+output "phone_number" {
+  value = local.contact_info.phone
+  sensitive = true
+}
+
+output "my_number" {
+  value = local.my_number
+  sensitive = true
+}
+```
+```bash
+$ terraform validate
+$ terraform apply -auto-approve
+```
+![alt text](image-8.png)
+
+```bash
+$ nano main.tf
+```
+```tf
+variable "name" {
+  type = string
+  sensitive = true
+  default = "John"
+}
+
+variable "phone" {
+  type = string
+  sensitive = true
+  default = "123-456"
+}
+
+locals {
+  contact_info = {
+    name = var.name
+    phone = var.phone
+  }
+  my_number = nonsensitive(var.phone)
+}
+
+output "name" {
+  value = local.contact_info.name
+  sensitive = true
+}
+
+output "phone_number" {
+  value = local.contact_info.phone
+  sensitive = true
+}
+
+output "my_number" {
+  value = local.my_number
+}
+```
+```bash
+$ terraform validate
+$ terraform apply -auto-approve
+```
+![alt text](image-9.png)
