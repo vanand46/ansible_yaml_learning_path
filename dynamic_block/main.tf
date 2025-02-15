@@ -1,8 +1,8 @@
 #Configure the AWS provider
 provider "aws" {
   # Replace with your actual AWS credentials
-  access_key = "YOUR_ACCESS_KEY"
-  secret_key = "YOUR_SECRET_KEY"
+  access_key = ""
+  secret_key = ""
   region     = "us-east-1" # Replace with your desired region
 }
 
@@ -80,17 +80,11 @@ resource "aws_instance" "web_server" {
   subnet_id     = aws_subnet.my_subnet.id
 
   tags = {
-    Name = "WebServer-${local.instance_suffix}"
+    Name = "WebServer-${local.instance_suffix}-avg"
   }
-}
+  lifecycle {
+    #prevent_destroy = true
+    create_before_destroy = true
+  }
 
-
-# To showcase data block
-data "aws_ami" "latest_amazon_linux" {
-  most_recent = true
-  owners      = ["amazon"]
-}
-
-output "ami_id" {
-  value = data.aws_ami.latest_amazon_linux.id
 }
