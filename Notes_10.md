@@ -90,3 +90,106 @@ $ terraform destroy -auto-approve # will throw error deleting S3 Bucket is not e
 $terraform login ##paste the api token
 ```
 ![alt text](image-1.png)
+
+## State Locking
+
+- It is mechanism to prevent concurrent operations on the same state file to avoid conflicts and potential corruption.
+- Consistency
+- Integrity
+- Reliability
+- Safety
+
+### State Locking Steps
+- Define the backend configuration
+- Specify the necessary parameters for state locking such as DynamoDB table for AWS S3
+- Azure Blob Storage and Google Cloud Storage can automatically handle the state locking.
+
+### Implement State Locking using Terraform in AWS
+```bash
+$mkdir s3-dynamodb-state
+$cd s3-dynamodb-state
+## create two configurations files(s3.tf and dynamo.tf)
+$nano s3.tf
+```
+```tf
+provider "aws" {
+  access_key = "YOUR_AWS_ACCESS_KEY"
+  secret_key = "YOUR_AWS_SECRET_KEY"
+  region = "us-east-1"
+}
+
+resource "aws_s3_bucket" "backend" {
+    bucket = "myterraformstatedemo-00-backend-avg"
+    tags = {
+        Name = "S3 Remote Terraform State Store"
+    }
+}
+
+resource "aws_s3_bucket_versioning" "enable_versioning" {
+  bucket = aws_s3_bucket.backend.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "s3_encryption" {
+  bucket = aws_s3_bucket.backend.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = "AES256"
+    }
+  }
+}
+
+resource "aws_s3_bucket_object_lock_configuration" "s3_lock" {
+  bucket = aws_s3_bucket.backend.id
+  object_lock_enabled = "Enabled"
+  depends_on = [aws_s3_bucket_versioning.enable_versioning]
+}
+
+output "s3_bucket_id" {
+  value = aws_s3_bucket.backend.id
+}
+
+```
+```bash
+$nano dynamo.tf
+```
+```tf
+resource "aws_dynamodb_table" "terraform-lock" {
+    name           = "terraform_state"
+    read_capacity  = 5
+    write_capacity = 5
+    hash_key       = "LockID"
+    attribute {
+        name = "LockID"
+        type = "S"
+    }
+    tags = {
+        "Name" = "DynamoDB Terraform State Lock Table"
+    }
+}
+```
+```bash
+$ terraform init
+$ terraform validate
+$ terraform plan
+$ terraform apply -auto-approve
+## Please check all the aws resources are created or not.
+$ nano main.tf
+```
+```tf
+terraform {
+  backend "s3" {
+    bucket         = "myterraformstatedemo-00-backend-avg"
+    key            = "terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform_state"
+  }
+}
+```
+```bash
+$ terraform init -backend-config="access_key='YOUR_AWS_ACCESS_KEY'"  -backend-config="secret_key='YOUR_AWS_SECRET_KEY'" 
+$ terraform apply -auto-approve
+```
