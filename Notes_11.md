@@ -628,6 +628,23 @@ $ terraform output phone_number
   $ terraform destroy -auto-approve
   ```
 
+## Security in Terraform
+- practices and tools used to ensure the security of the infrastructure managed by terraform
+- Purpose
+  - Protect sensitive data
+  - Ensures compliance with standards
+  - Prevents misconfiguration
+  - Maintains consistent environment
+- Use cases
+  - Restrict EC2 instances
+  - Managing State files 
+## Security Risks and mitigations
+- Misconfiguration (Use strict code reviews, audit and validate rules)
+- Sensitive Data Exposure (Protect the files.Always use encrypt mechanisms and ACL)
+- Insufficient ACL (set least access as possible and start with no access)
+- Dependency Management (external resources are secure and update dependencies)
+
+
 
 
 
