@@ -7,7 +7,7 @@ provider "aws" {
 
 provider "aws" {
   access_key = "aws-access_key"
-  secret_key = "aws-secret_key/XKt8+Ui5GIp"
+  secret_key = "aws-secret_key"
   region = "us-east-2"
   alias = "us_east_2"
 }
