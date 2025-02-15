@@ -79,3 +79,14 @@ $ terraform apply -auto-approve
 $ cat terraform.tfstate ## it will be empty as state file moved to s3
 $ terraform destroy -auto-approve # will throw error deleting S3 Bucket is not empty
 ```
+
+## https://app.terraform.io/ Examples
+
+- Create an Organization (Name: demo_org_avg)
+![alt text](image.png)
+- Authenticate Terraform account
+- Generate a Terraform Cloud/Enterprise API Token and copy it
+```bash
+$terraform login ##paste the api token
+```
+![alt text](image-1.png)
