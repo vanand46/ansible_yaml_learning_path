@@ -33,4 +33,49 @@
 - Two types of back end
   - Local Backend - stores state file on the local disk.suitable for individual project
   - Remote Backend - stores the state file in a remote , shared store.
- 
+ ## Managing Terraform state using default local backend 
+```bash
+$mkdir tf_state_local
+$cd tf_state_local
+$nano main.tf
+```
+```tf
+provider "aws" {
+  access_key = "your access_key"
+  secret_key = "your secret_key"
+  region = "us-east-1"
+}
+
+resource "aws_s3_bucket" "example" {
+    bucket = "demo-bucket-terraform-state-avg"
+}
+```
+```bash
+$ terraform init
+$ terraform validate
+$ terraform plan
+$ terraform apply -auto-approve
+## check s3 to check whether bucket has created or not
+$ cat terraform.tfstate
+$nano terraform.tf
+```
+```tf
+terraform {
+  backend "s3" {
+    bucket = "demo-bucket-terraform-state-avg"
+    key = "prod/aws_infra"
+    region = "us-east-1"
+  }
+}
+```
+```bash
+$ terraform init ## will throw an error because credentials are missing
+$ terraform init -backend-config="access_key=''" -backend-config="secret_key=''"
+## check s3 to check whether bucket has folder created prod/aws_infra or not
+$ terraform validate
+$ terraform plan
+$ terraform apply -auto-approve
+## check s3 to check whether bucket has tfstate file created under prod/aws_infra or not
+$ cat terraform.tfstate ## it will be empty as state file moved to s3
+$ terraform destroy -auto-approve # will throw error deleting S3 Bucket is not empty
+```
