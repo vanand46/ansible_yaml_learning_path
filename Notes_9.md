@@ -328,7 +328,82 @@ $cat main.tf ## To see formatted version of file
 - Set logging path
 - Disable logging
 
-## Workspaces Examples
+## Generating Workspaces in Terraform
+```bash
+$mkdir test_tf_workspace
+$cd test_tf_workspace
+$nano main.tf
+```
+```tf
+resource "tls_private_key" "generated" {
+  algorithm = "RSA"
+}
 
+resource "local_file" "private_key_pem" {
+  content  = tls_private_key.generated.private_key_pem
+  filename = "my-aws-default-key.pem"
+}
 
+resource "random_string" "random" {
+  length      = 15
+  special     = true
+  min_numeric = 6
+  min_special = 2
+  min_upper   = 3
+}
+
+# Output block to print the random value
+output "random_output" {
+  value = random_string.random.result
+}
+```
+```bash
+$terraform init
+$terraform validate
+$terraform apply -auto-approve
+$ls ## to see key file is created or not
+$terraform workspace list
+$terraform workspace new DEV
+$terraform workspace list
+$terraform workspace show
+$tree terraform.tfstate.d ## to see directory structure
+$nano main.tf
+```
+```tf
+resource "tls_private_key" "generated" {
+  algorithm = "RSA"
+}
+
+resource "local_file" "private_key_pem" {
+  content  = tls_private_key.generated.private_key_pem
+  filename = "my-aws-DEV-key.pem"
+}
+
+resource "random_string" "random" {
+  length      = 15
+  special     = true
+  min_numeric = 6
+  min_special = 2
+  min_upper   = 3
+}
+
+# Output block to print the random value
+output "random_output" {
+  value = random_string.random.result
+}
+```
+```bash
+$terraform apply -auto-approve
+$ls ## to see key file is created or not
+$tree terraform.tfstate.d ## to see directory structure
+$terraform state list
+$terraform show
+$terraform workspace select default
+$terraform workspace list
+$terraform destroy -auto-approve
+$terraform workspace select default
+$terraform destroy -auto-approve
+$terraform workspace select default
+$terraform workspace delete DEV
+```
 
