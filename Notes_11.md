@@ -266,5 +266,22 @@ $ terraform apply -auto-approve
 $ terraform output ## only output contents
 $ terraform output phone_number
 ```
+## Block and Functions
+### Data Block
+- Data sources in Terraform are special configurations allows you to pull data from various external resources.
+- Using data block to use the external data resources information\
+- most_recent, owners and tags
+### Data Resources and Managed Resources
+- Data Resources - Read Only
+- Managed Resources  - handled by terraform
+- Data Source Arguments
+  - meta-arguments
+- Data Resource Dependencies
+  - depends_on
+### Terraform Built-in Functions
+- Offers bunch of built in functions
+- Example `max(5, 12, 9)` 
+  
+
 
 
