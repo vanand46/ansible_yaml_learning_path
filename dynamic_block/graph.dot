@@ -1,0 +1,12 @@
+digraph G {
+  rankdir = "RL";
+  node [shape = rect, fontname = "sans-serif"];
+  "data.aws_ami.latest_amazon_linux" [label="data.aws_ami.latest_amazon_linux"];
+  "aws_instance.web_server" [label="aws_instance.web_server"];
+  "aws_security_group.dynamic_sg" [label="aws_security_group.dynamic_sg"];
+  "aws_subnet.my_subnet" [label="aws_subnet.my_subnet"];
+  "aws_vpc.my_vpc" [label="aws_vpc.my_vpc"];
+  "aws_instance.web_server" -> "aws_subnet.my_subnet";
+  "aws_security_group.dynamic_sg" -> "aws_vpc.my_vpc";
+  "aws_subnet.my_subnet" -> "aws_vpc.my_vpc";
+}

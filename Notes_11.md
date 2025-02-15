@@ -280,8 +280,159 @@ $ terraform output phone_number
   - depends_on
 ### Terraform Built-in Functions
 - Offers bunch of built in functions
-- Example `max(5, 12, 9)` 
-  
+- Example `max(5, 12, 9)`
+
+## Dynamic Blocks
+- powerful way to dynamically generate repeatable nested configuration blocks within resources
+- Elements of Dynamic Block
+  - Label
+  - for_each
+  - Content
+  - Iterator
+  - Label arguments
+- Constraints
+  - Integration
+  - Meta-arguments (can not use meta arguments or provisioner)  
+  - Complex Collections
+- Multi-Level Nested Block Structures
+- Configuration file will be shorter
+- Considerations
+  - Iterator Symbols
+  - Naming and Scope 
+  ```bash
+  $mkdir dynamic_block
+  $cd dynamic_block
+  $nano main.tf
+  ```
+  ```tf
+  #Configure the AWS provider
+  provider "aws" {
+    # Replace with your actual AWS credentials
+    access_key = "YOUR_ACCESS_KEY"
+    secret_key = "YOUR_SECRET_KEY"
+    region     = "us-east-1" # Replace with your desired region
+  }
+
+  resource "aws_vpc" "my_vpc" {
+    cidr_block = "10.0.0.0/16"
+    tags = {
+      Name = "MyVPC"
+    }
+  }
+
+  locals {
+    ingress_rules = {
+      ssh = {
+        from_port   = 22
+        to_port     = 22
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+      },
+      http = {
+        from_port   = 80
+        to_port     = 80
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+      }
+    }
+  }
+
+
+  resource "aws_security_group" "dynamic_sg" {
+    name   = "dynamic-sg"
+    vpc_id = aws_vpc.my_vpc.id
+
+    dynamic "ingress" {
+      for_each = local.ingress_rules
+      content {
+        from_port   = ingress.value.from_port
+        to_port     = ingress.value.to_port
+        protocol    = ingress.value.protocol
+        cidr_blocks = ingress.value.cidr_blocks
+      }
+    }
+
+    #ingress {
+    #  from_port = 22
+    #  to_port = 22
+    #  protocol = "tcp"
+    #  cidr_blocks = ["0.0.0.0/0"]
+    #}
+
+    #ingress {
+    #  from_port = 80
+    #  to_port = 80
+    #  protocol = "tcp"
+    #  cidr_blocks = ["0.0.0.0/0"]
+    #}
+  }
+
+  locals {
+    instance_suffix = "001"
+  }
+
+  resource "aws_subnet" "my_subnet" {
+    vpc_id            = aws_vpc.my_vpc.id # Ensures subnet is within the created VPC
+    cidr_block        = "10.0.1.0/24"     # Specify a valid CIDR block within the VPC's range
+    availability_zone = "us-east-1a"      # Adjust to your desired AZ
+
+    tags = {
+      Name = "MySubnet"
+    }
+  }
+
+  resource "aws_instance" "web_server" {
+    ami           = "ami-0e1bed4f06a3b463d"
+    instance_type = "t2.micro"
+    subnet_id     = aws_subnet.my_subnet.id
+
+    tags = {
+      Name = "WebServer-${local.instance_suffix}"
+    }
+  }
+
+
+  # To showcase data block
+  data "aws_ami" "latest_amazon_linux" {
+    most_recent = true
+    owners      = ["amazon"]
+  }
+
+  output "ami_id" {
+    value = data.aws_ami.latest_amazon_linux.id
+  }
+
+  ```
+  ```bash
+  $terraform init
+  $terraform validate
+  $terraform plan
+  $terraform apply -auto-approve
+  ## Please check AWS console to resources are created
+  ```
+  ## Graphs
+  - It is a powerfull tool for visualizing the relationship and dependencies between the resources
+  - `$terraform graph`
+  - `-type=` Type of graph (plan, applym, plan-refresh-only, plan-destroy)
+  - `-draw-cycles`
+  - `-plan=<path to plan file>`
+  - Generate output in DOT language
+
+  ```bash
+  $cd dynamic_block
+  $terraform graph > graph.dot
+  $cat graph.dot
+  # Use online graphviz tools to visualize the graph using the cat graph.dot output
+  ```
+
+  ## Terraform Resource Lifecycles
+  - It supports parallel resource management through its resource graph, which optimizes the deployment speeds
+  - Lifecycle Arguments
+    - `prevent_destroy` - prevents accidental deletion of the resources
+    - `create_before_destroy` - ensures that new resources are created before old one created
+    - `ignore_changes` - ignore resource from updates
+
+
 
 
 
