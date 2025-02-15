@@ -276,3 +276,59 @@ $terraform apply -auto-approve
 ```bash
 $terraform destroy -auto-approve ## delete all resources created above
 ```
+### Formatting and Tain in Terraform
+- Structuring and organizing the configurationf files
+- Taint command is used to makes a specific object as tainted in the Terradform state(deprecated use -replace)
+
+```bash
+$mkdir tf_test_format
+$cd tf_test_format
+$nano main.tf
+```
+```tf
+resource "random_string" "random" {
+  length = true
+  special = true
+ min_numeric = 6
+    min_special = 2
+         mini_upper = 3 
+}
+```
+
+```bash 
+$cat main.tf ## To see unformatted version of file
+$terraform fmt
+$cat main.tf ## To see formatted version of file
+```
+
+### Terraform Workspaces and CLI
+
+- Workspaces help organize infrastructure by environments and variables within a single directory
+  - Environment Management - Manage multiple environments within the same configuration.
+  - State Isolation - Maintain isolated states, preventing changes in one from affecting other
+  - Easy Switch - Easy switching between workspacess
+  - Consistent configuration
+#### Command Structure of Terraform Workspaces
+- terraform workspace list
+- terraform workspace new <workspace_name>
+- terraform workspace delete <workspace_name>
+- terraform workspace show 
+### Terraform CLI
+- It is a tool that allows you to manage IaC using HCL.
+### Terraform State Command
+- It is used for advanced state management allowing us to modify the state indirectly.
+### Enable Logging
+- For logging purposes
+- export TF_LOG=TRACE (Linux)
+- $env:TF_LOG="TRACE" (PowerShell)
+### Terraform Import
+- it helps add the existing resources to configuration and bring them into the Terraform state with minimal coding and effort.
+### Debugging in Terraform
+- Enable Logging
+- Set logging path
+- Disable logging
+
+## Workspaces Examples
+
+
+
