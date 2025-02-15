@@ -135,6 +135,90 @@ resource "aws_s3_bucket_versioning" "enable_versioning" {
     status = "Enabled"
   }
 }
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "s3_encryption" {
+  bucket = aws_s3_bucket.backend.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm     = "AES256"
+    }
+  }
+}
+
+resource "aws_s3_bucket_object_lock_configuration" "s3_lock" {
+  bucket = aws_s3_bucket.backend.id
+  object_lock_enabled = "Enabled"
+  depends_on = [aws_s3_bucket_versioning.enable_versioning]
+}
+
+output "s3_bucket_id" {
+  value = aws_s3_bucket.backend.id
+}
+```
+```bash
+ $nano dynamo.tf
+```
+```tf
+resource "aws_dynamodb_table" "terraform-lock" {
+    name           = "terraform_state"
+    read_capacity  = 5
+    write_capacity = 5
+    hash_key       = "LockID"
+    attribute {
+        name = "LockID"
+        type = "S"
+    }
+    tags = {
+        "Name" = "DynamoDB Terraform State Lock Table"
+    }
+}
+```
+```bash
+$ terraform init
+$ terraform validate
+$ terraform plan
+$ terraform apply -auto-approve
+$ nano main.tf
+```
+```tf
+terraform {
+  backend "s3" {
+    bucket         = "myterraformstatedemo-00-backend-avg"
+    key            = "terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform_state"
+  }
+}
+```
+```bash
+$ terraform init -backend-config="access_key=YOUR_AWS_ACCESS_KEY"  -backend-config="secret_key=YOUR_AWS_SECRET_KEY"
+$ terraform apply -auto-approve
+```
+## Migrate the state file to terraform cloud:
+- Login to https://app.terraform.io/ 
+- Click on your Organization
+- Create workspace > CLI Driven Workflow
+  - Workspace name: my-aws-app
+  - Create
+```bash
+$ nano main.tf
+```
+```tf
+terraform {
+  backend "remote" {
+    hostname = "app.terraform.io"
+    organization = "demo_org_avg"
+
+    workspaces { 
+      name = "my-aws-app" 
+    } 
+  }
+}
+```
+```bash
+$ terraform validate
+$ terraform init -migrate-state
 ```
 ![alt text](images/image-2.png)
 ![alt text](images/image-3.png)
