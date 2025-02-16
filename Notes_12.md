@@ -43,3 +43,55 @@ $ terraform plan
 $ terraform apply --auto-approve
 ## Please check the AWS console.
 ```
+- ### Alternative Approach
+```sh
+$ mkdir security02
+$ cd security02
+$ nano main.tf
+$ nano credentials.tf
+```
+```tf 
+## main.tf
+resource "aws_instance" "web" {
+  ami = "ami-0e1bed4f06a3b463d"
+  instance_type = "t2.micro"
+  tags = {
+    Name = "MyMachine02"
+  }
+}
+
+```
+```tf 
+## credentials.tf
+provider "aws" {
+  access_key = var.AWS_ACCESS_KEY
+  secret_key = var.AWS_SECRET_KEY
+  region = "us-east-1"
+}
+
+variable "AWS_ACCESS_KEY" {}
+variable "AWS_SECRET_KEY" {}
+```
+- Set the environment variables
+```sh
+$ export TF_VAR_AWS_ACCESS_KEY=aws_access_key
+$ export TF_VAR_AWS_SECRET_KEY=aws_secret_key
+```
+
+```sh
+$ terraform init
+$ terraform validate
+$ terraform plan
+$ terraform apply --auto-approve
+```
+
+- ### Checkov(tool) Validation Example
+```sh
+## Install Checkov
+$ pip install checkov
+$ which checkov
+$ checkov -f credentials.tf 
+```
+
+## Terraform Security - Case Studies
+- Starbucks Case Study
