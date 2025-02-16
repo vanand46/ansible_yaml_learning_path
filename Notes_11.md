@@ -1,74 +1,79 @@
 # Configuration Management with Ansible and Terraform – 15 February 2025 
 
-## Read, Generate and Modify Configurations
-- Data Block - used to provide data to resources which will collect information from aws
-- Initializing the configuration
-- Validate the configuration
+## Read, Generate, and Modify Configurations
+- **Data Block**: Used to provide data to resources that will collect information from AWS.
+- **Initializing the Configuration**
+- **Validating the Configuration**
   - Valid Message
-  - if it is not valid, it will through the errors
-- Planning the changes
-- Applying the configuration
-- Managing the state
-- Modifying and Iterating (designed to update the infrastructure incrementaly)
-- Destroying the infrastructure
-## Variables and Ouputs
-- Input variables (variable blocks)
-(attributes are)
-  - default
-  - type
-  - description
-  - validation
-  - sensitive
-- Output values (Output blocks)
-  - Referred to as outputs
-- Local Values (Local block)
+  - If it is not valid, it will throw errors.
+- **Planning the Changes**
+- **Applying the Configuration**
+- **Managing the State**
+- **Modifying and Iterating**: Designed to update the infrastructure incrementally.
+- **Destroying the Infrastructure**
 
-### Accessing the child 
+## Variables and Outputs
+- **Input Variables (Variable Blocks)**
+  - Attributes include:
+    - Default
+    - Type
+    - Description
+    - Validation
+    - Sensitive
+- **Output Values (Output Blocks)**
+  - Referred to as outputs.
+- **Local Values (Local Block)**
+
+
+### Accessing the Child Module
 `module.<MODULE_NAME>.<OUTPUT_NAME>`
+
 ### Local Values
-- A local value associates a name with expression, allowing users to reuse the name multiple times within a module instead of duplicating the expression.
-- Local values are like a function's temporary local variables.
+- A local value associates a name with an expression, allowing users to reuse the name multiple times within a module instead of duplicating the expression.
+- Local values function like temporary local variables in a function.
 ```tf
 locals {
-  service_name = 'ec2'
+  service_name = "ec2"
 }
 ```
-- to reduce duplication
-- simplifying complex expressions
-- faciliating future changes
+- Reduce duplication
+- Simplify complex expressions
+- Facilitate future changes
 
 ## Advanced Variable Management
 ### Custom Validation Rules
-- Users can specify custom validation
-- introduced in Terraform v0.13.0
-- Usage
+- Users can specify custom validation.
+- Introduced in Terraform v0.13.0.
+- Usage:
 ```tf
-variable "image"{
+variable "image" {
     validation { 
-      condition = '' 
-      error_message = ''
+      condition = "" 
+      error_message = ""
     }
 }
 ```
-### Supressing values
-- Using the attribute `sensitive`
-- it prevent its value from appearing in output
-### Securing Secrets in Terraform code
-- `sensitive` data flag
-- Use environment variables
-```bash
-export TF_VAR_secret_key = "value"
 
-## use
+### Suppressing Values
+- Using the attribute `sensitive` prevents its value from appearing in output.
+
+### Securing Secrets in Terraform Code
+- Use the `sensitive` data flag.
+- Use environment variables:
+```bash
+export TF_VAR_secret_key="value"
+
+## Use
 variable "secret_key" {}
 ```
-- Use terraform vault provider
+- Use the Terraform Vault provider:
 ```tf
 provider "vault" {}
 ```
-- Encrypt state files using the keyword `encrypt`
-- Use least privilege access
-- Audit and rotate secrets regularly
+- Encrypt state files using the keyword `encrypt`.
+- Apply the principle of least privilege access.
+- Audit and rotate secrets regularly.
+
 
 ## Variable Collections and Structure Types Terraform
 - Primitive Types
@@ -85,7 +90,7 @@ provider "vault" {}
 - Square bracket index notation  
 ## Type Conversion
 - Terraform facilitate flexible type conversions.
-- Automatic conversion like `JS`
+- Automatic conversion like JS
 - If it can not handle conversion, it will throw the mismatch error
 - tostring(), tonumber()
  ## Terraform Variables, Validation , Data Examples
@@ -266,39 +271,47 @@ $ terraform apply -auto-approve
 $ terraform output ## only output contents
 $ terraform output phone_number
 ```
-## Block and Functions
-### Data Block
-- Data sources in Terraform are special configurations allows you to pull data from various external resources.
-- Using data block to use the external data resources information\
-- most_recent, owners and tags
-### Data Resources and Managed Resources
-- Data Resources - Read Only
-- Managed Resources  - handled by terraform
-- Data Source Arguments
-  - meta-arguments
-- Data Resource Dependencies
-  - depends_on
-### Terraform Built-in Functions
-- Offers bunch of built in functions
-- Example `max(5, 12, 9)`
+## Block and Functions  
 
-## Dynamic Blocks
-- powerful way to dynamically generate repeatable nested configuration blocks within resources
-- Elements of Dynamic Block
-  - Label
-  - for_each
-  - Content
-  - Iterator
-  - Label arguments
-- Constraints
-  - Integration
-  - Meta-arguments (can not use meta arguments or provisioner)  
-  - Complex Collections
-- Multi-Level Nested Block Structures
-- Configuration file will be shorter
-- Considerations
-  - Iterator Symbols
-  - Naming and Scope 
+### Data Block  
+- Data sources in Terraform are special configurations that allow you to pull data from various external resources.  
+- Use the data block to retrieve information from external data sources.  
+- Common attributes: `most_recent`, `owners`, and `tags`.  
+
+### Data Resources and Managed Resources  
+- **Data Resources** – Read-only.  
+- **Managed Resources** – Handled by Terraform.  
+- **Data Source Arguments**  
+  - Meta-arguments.  
+- **Data Resource Dependencies**  
+  - `depends_on`.  
+
+### Terraform Built-in Functions  
+- Offers a variety of built-in functions.  
+- Example: `max(5, 12, 9)`.  
+
+## Dynamic Blocks  
+- A powerful way to dynamically generate repeatable nested configuration blocks within resources.  
+- **Elements of a Dynamic Block**  
+  - Label  
+  - `for_each`  
+  - Content  
+  - Iterator  
+  - Label arguments  
+
+- **Constraints**  
+  - **Integration**  
+  - **Meta-arguments** – Cannot use meta-arguments or provisioners.  
+  - **Complex Collections**  
+
+- **Multi-Level Nested Block Structures**  
+- Reduces the length of configuration files.  
+
+- **Considerations**  
+  - Iterator symbols  
+  - Naming and scope  
+
+
   ```bash
   $mkdir dynamic_block
   $cd dynamic_block
@@ -410,27 +423,29 @@ $ terraform output phone_number
   $terraform apply -auto-approve
   ## Please check AWS console to resources are created
   ```
-  ## Graphs
-  - It is a powerfull tool for visualizing the relationship and dependencies between the resources
-  - `$terraform graph`
-  - `-type=` Type of graph (plan, applym, plan-refresh-only, plan-destroy)
-  - `-draw-cycles`
-  - `-plan=<path to plan file>`
-  - Generate output in DOT language
+  ## Graphs  
+- It is a powerful tool for visualizing the relationships and dependencies between resources.  
+- `$terraform graph`  
+- `-type=` Specifies the type of graph (plan, apply, plan-refresh-only, plan-destroy).  
+- `-draw-cycles`  
+- `-plan=<path to plan file>`  
+- Generates output in DOT language.  
 
-  ```bash
-  $cd dynamic_block
-  $terraform graph > graph.dot
-  $cat graph.dot
-  # Use online graphviz tools to visualize the graph using the cat graph.dot output
-  ```
+```bash
+cd dynamic_block  
+terraform graph > graph.dot  
+cat graph.dot  
+# Use online Graphviz tools to visualize the graph using the `cat graph.dot` output.  
+```
 
-  ## Terraform Resource Lifecycles
-  - It supports parallel resource management through its resource graph, which optimizes the deployment speeds
-  - Lifecycle Arguments
-    - `prevent_destroy` - prevents accidental deletion of the resources
-    - `create_before_destroy` - ensures that new resources are created before old one created
-    - `ignore_changes` - ignore resource from updates
+## Terraform Resource Lifecycles  
+- Supports parallel resource management through its resource graph, optimizing deployment speed.  
+- **Lifecycle Arguments:**  
+  - `prevent_destroy` - Prevents accidental deletion of resources.  
+  - `create_before_destroy` - Ensures that new resources are created before old ones are deleted.  
+  - `ignore_changes` - Ignores specific resource attributes from updates.  
+
+
   ### Examples
    ```bash
   $cd dynamic_block
@@ -628,21 +643,25 @@ $ terraform output phone_number
   $ terraform destroy -auto-approve
   ```
 
-## Security in Terraform
-- practices and tools used to ensure the security of the infrastructure managed by terraform
-- Purpose
-  - Protect sensitive data
-  - Ensures compliance with standards
-  - Prevents misconfiguration
-  - Maintains consistent environment
-- Use cases
-  - Restrict EC2 instances
-  - Managing State files 
-## Security Risks and mitigations
-- Misconfiguration (Use strict code reviews, audit and validate rules)
-- Sensitive Data Exposure (Protect the files.Always use encrypt mechanisms and ACL)
-- Insufficient ACL (set least access as possible and start with no access)
-- Dependency Management (external resources are secure and update dependencies)
+## Security in Terraform  
+- **Practices and tools used to ensure the security of the infrastructure managed by Terraform**  
+
+### Purpose  
+- Protect sensitive data  
+- Ensure compliance with standards  
+- Prevent misconfiguration  
+- Maintain a consistent environment  
+
+### Use Cases  
+- Restricting EC2 instances  
+- Managing state files  
+
+## Security Risks and Mitigations  
+- **Misconfiguration**: Use strict code reviews, and audit and validate rules.  
+- **Sensitive Data Exposure**: Protect files by using encryption mechanisms and access control lists (ACLs).  
+- **Insufficient ACL**: Apply the principle of least privilege—start with no access and grant only what is necessary.  
+- **Dependency Management**: Ensure external resources are secure and keep dependencies updated.
+
 
 
 
