@@ -68,3 +68,5 @@ This repository contains notes and examples collected during the learning proces
 
 - [Note-12: Terraform Security](./Notes_12.md)
   - Security Tools
+  - Manage Secrets and Crdentials in Terraform
+  - Terraform Cloud
