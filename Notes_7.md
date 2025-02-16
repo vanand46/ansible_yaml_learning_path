@@ -1,4 +1,4 @@
-# Configuration Management with Ansible and Terraform – 01 February 2025  
+# Configuration Management with Ansible and Terraform
 
 ## Ansible Galaxy  
 

@@ -1,4 +1,4 @@
-# Configuration Management with Ansible and Terraform 11 January 2025
+# Configuration Management with Ansible and Terraform
 
 ## Introduction to Configuration Management
 

@@ -1,4 +1,4 @@
-# Configuration Management with Ansible and Terraform – 09 February 2025  
+# Configuration Management with Ansible and Terraform 
 ## Terraform State
 - It is a file that tracks the state of infrastructure managed by Terraform.
 - It contains the details of all resources along with statuses such as ACTIVE, DELETED, and PROVISIONING.

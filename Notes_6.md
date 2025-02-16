@@ -1,4 +1,4 @@
-# Configuration Management with Ansible and Terraform 26 January 2025
+# Configuration Management with Ansible and Terraform
 
 ## Jinja2 Template (Continue...)
 

@@ -1,4 +1,4 @@
-# Configuration Management with Ansible and Terraform – 02 February 2025  
+# Configuration Management with Ansible and Terraform 
 
 ## Infrastructure as Code  
 - It is a practice followed by IT companies to improve infrastructure deployments, increase users' ability to scale quickly, and improve the application development process.  

@@ -1,4 +1,4 @@
-# Configuration Management with Ansible and Terraform 19 January 2025
+# Configuration Management with Ansible and Terraform
 
 ## Global Variables in Ansible
 ``` INI

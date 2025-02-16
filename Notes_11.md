@@ -1,4 +1,4 @@
-# Configuration Management with Ansible and Terraform – 15 February 2025 
+# Configuration Management with Ansible and Terraform
 
 ## Read, Generate, and Modify Configurations
 - **Data Block**: Used to provide data to resources that will collect information from AWS.

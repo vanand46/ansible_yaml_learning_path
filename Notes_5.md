@@ -1,4 +1,4 @@
-# Configuration Management with Ansible and Terraform 25 January 2025
+# Configuration Management with Ansible and Terraform
 
 ### Conditionals Example
 ```yaml

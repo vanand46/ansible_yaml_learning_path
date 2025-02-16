@@ -1,4 +1,4 @@
-# Configuration Management with Ansible and Terraform 18 January 2025
+# Configuration Management with Ansible and Terraform
 # Ansible Custom Facts
 
 ## User-defined facts
