@@ -63,4 +63,8 @@ This repository contains notes and examples collected during the learning proces
   - Reading, generating, and modifying configurations  
   - Variable management and advanced validation  
   - Dynamic blocks and functions in Terraform  
-  - Security best practices in Terraform 
+  - Security best practices in Terraform
+  - Lifecycles
+
+- [Note-12: Terraform Security](./Notes_12.md)
+  - Security Tools
