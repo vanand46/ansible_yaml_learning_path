@@ -92,6 +92,3 @@ $ pip install checkov
 $ which checkov
 $ checkov -f credentials.tf 
 ```
-
-## Terraform Security - Case Studies
-- Starbucks Case Study
